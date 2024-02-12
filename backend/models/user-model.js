@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// ! Securing the password
+// ? Securing the password
 userSchema.pre("save", async function (next) {
   const user = this;
 
@@ -42,6 +42,11 @@ userSchema.pre("save", async function (next) {
     // next(error);
   }
 });
+
+// ? Comparing the password
+userSchema.methods.comparePassword = async function(pass){
+  return await bcrypt.compare(pass,this.password);
+}
 
 // ? Generating the token using jsonwebtoken
 userSchema.methods.generateToken = async function () {
