@@ -39,7 +39,7 @@ const login = async (req, res) => {
 
     const userExist = await User.findOne({ email });
     if (!userExist) {
-      res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const passwordCheck = await userExist.comparePassword(password);

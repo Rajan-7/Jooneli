@@ -1,6 +1,6 @@
 
 const errorMiddleware = (err,req,res,next)=>{
-    const status = err.status || "422";
+    const status = err.status || "400";
     const message = err.message || "Backend error";
     const moreDetails = err.moreDetails || "Error from backend";
 
