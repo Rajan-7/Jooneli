@@ -57,4 +57,14 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { home, register, login };
+// To send data to frontend- User Data Fetching
+const user = async (req, res) => {
+  try {
+    const userData = req.user;
+    res.status(200).json({ userData });
+  } catch (error) {
+    console.error(`An error from user route ${error}`);
+  }
+};
+
+module.exports = { home, register, login, user };
