@@ -1,13 +1,23 @@
-const Contact = require('../models/contact-model')
+const connectDb = require("../utils/db");
 
-const contactForm = async(req,res)=>{
-   try {
-      const Response = req.body;
-      await Contact.create(Response);
-      res.status(200).json({message:"Message delivered successfully"});
-   } catch (error) {
-    res.status(500).json({message:"Message not delivered"});
-   }
-}
+const contactForm = async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    const conn = await connectDb();
+    conn.query(
+      "INSERT INTO contacts(name,email,subject,message) values(?,?,?,?)",
+      [name, email, subject, message],
+      (err, response) => {
+        if (err) {
+          res.status(500).json({ Message: "Message not delivered" });
+        } else {
+          res.status(200).json({ Message: "Delivered the message successfully!"});
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ Message: "Message not delivered" });
+  }
+};
 
 module.exports = contactForm;

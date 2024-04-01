@@ -1,15 +1,26 @@
-const mongoose = require("mongoose");
+const mysql = require('mysql2');
 
-const URL =process.env.JOON_URI;
+const dbConfig = {
+   host:process.env.DB_HOST,
+   user:process.env.DB_USER,
+   password:process.env.DB_PASSWORD,
+   database:process.env.DB_NAME
+}
 
-const connectDb = async()=>{
-   try {
-    await mongoose.connect(URL);
-    console.log("Database Connect successfully");
-   } catch (error) {
-    console.error("Connection failed",error.message);
-    process.exit(0);
-   }
+async function connectDb(){
+   return new Promise((resolve,reject)=>{
+      const pool = mysql.createPool(dbConfig);
+      pool.getConnection((err,conn)=>{
+         if(err){
+            console.log(`Problem Connecting Database ${err}`);
+            reject(err);
+            return;
+         }else{
+            console.log(`Connected To Database`);
+            resolve(conn);
+         }
+      })
+   })
 }
 
 module.exports = connectDb;
