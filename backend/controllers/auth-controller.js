@@ -54,9 +54,9 @@ const register = async (req, res) => {
       [username, email, contact, hash_password],
       (err, response) => {
         if (err) {
-          res.status(500).json({ Error: "Internal server errror" });
+        return  res.status(500).json({ Error: "Internal server errror" });
         } else {
-          res.status(200).json({ message:"Registration successful",token:token });
+        return  res.status(200).json({ message:"Registration successful",token:token });
         }
       }
     );
@@ -118,4 +118,20 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { home, register, login };
+// To get
+const getAllUser = async(req,res)=>{
+    try {
+      const conn = await connectDb();
+      conn.query("SELECT * FROM users",(err,rows)=>{
+        if(err){
+         return res.status(500).json({message:"Internal server error"});
+        }else{
+         return res.status(200).json(rows);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+}
+
+module.exports = { home, register, login,getAllUser };
