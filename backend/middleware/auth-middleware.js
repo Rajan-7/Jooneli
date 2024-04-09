@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user-model");
+const connectDb = require("../utils/db");
 
 const authMiddleware = async (req, res, next) => {
   const token = req.header("Authorization");
@@ -16,17 +16,32 @@ const authMiddleware = async (req, res, next) => {
   console.log("Token From Middleware", jwtToken);
 
   try {
+    const conn = await connectDb();
     const isVerified = jwt.verify(jwtToken, process.env.JOON_SECRET_KEY);
-    const userData = await User.findOne({ email: isVerified.email }).select({
-      password: 0,
-    });
+
+    // Query
+    const [queryResult] = await conn.promise().query(
+      "SELECT id,username,email,contact,isAdmin FROM users WHERE email = ?",
+      [isVerified.email]
+    );
+
+    // Extracting only row data
+    const userData = queryResult[0];
+
+    // If no user found, return unauthorized
+    if(!userData){
+      return res.status(401).json({message:"Unauthorized user"});
+    }
+
     req.user = userData;
     req.token = token;
-    req.userID = userData._id;
-    // console.log(userData);
+    req.userID = userData.id;
+    console.log(userData);
     // next();
   } catch (error) {
-    return res.status(401).json({ msg: "Unauthorized HTTP,Token not provided" });
+    return res
+      .status(401)
+      .json({ msg: "Unauthorized HTTP,Token not provided" });
   }
   next();
 };
