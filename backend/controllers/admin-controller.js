@@ -1,6 +1,5 @@
 const connectDb = require('../utils/db');
 
-
 const getAllUser = async(req,res)=>{
     try {
       const conn = await connectDb();

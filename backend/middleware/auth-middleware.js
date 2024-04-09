@@ -12,8 +12,9 @@ const authMiddleware = async (req, res, next) => {
   }
 
   //Triming the space of Token: assuming token is in the form "Bearer <tokenValue>"
+  
   const jwtToken = token.replace("Bearer", "").trim();
-  console.log("Token From Middleware", jwtToken);
+  // console.log("Token From Middleware", jwtToken);
 
   try {
     const conn = await connectDb();

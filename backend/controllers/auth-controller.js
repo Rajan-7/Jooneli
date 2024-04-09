@@ -86,7 +86,7 @@ const login = async (req, res) => {
     const user = await userExist;
 
     if (!user.length) {
-      res.status(401).json({ Error: "Invalid Credentials" });
+      return res.status(401).json({ Error: "Invalid Credentials" });
     }
 
     // Validating the password
@@ -104,17 +104,17 @@ const login = async (req, res) => {
           expiresIn: "30d",
         }
       );
-      res
+      return res
         .status(200)
         .json({
           Message: "Login successful",
           token: token,
         });
     } else {
-      res.status(401).json({ Error: "Invalid Credentials" });
+      return res.status(401).json({ Error: "Invalid Credentials" });
     }
   } catch (error) {
-    res.status(500).send("Internal server error");
+    return res.status(500).send("Internal server error");
   }
 };
 
