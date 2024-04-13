@@ -21,13 +21,17 @@ const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
     const conn = await connectDb();
-    conn.query("SELECT id,username,email,contact FROM users WHERE id=?", [id],(err,rows)=>{
-      if(err){
-        return res.status(500).json({error:"Internal server error"});
-      }else{
-        return res.status(200).json(rows[0]);
+    conn.query(
+      "SELECT id,username,email,contact,isAdmin FROM users WHERE id=?",
+      [id],
+      (err, rows) => {
+        if (err) {
+          return res.status(500).json({ error: "Internal server error" });
+        } else {
+          return res.status(200).json(rows[0]);
+        }
       }
-    });
+    );
   } catch (error) {
     console.log(`Error While Fetching Single User:${error}`);
   }
@@ -45,4 +49,83 @@ const deleteUserById = async (req, res) => {
   }
 };
 
-module.exports = { getAllUser, deleteUserById, getUserById };
+// To Get All The Contacts Data
+const getAllContact = async (req, res) => {
+  try {
+    const conn = await connectDb();
+    conn.query("SELECT * FROM contacts", (err, rows) => {
+      if (err) {
+        console.log(`Error While Fetching  Data:${err}`);
+      } else {
+        res.status(200).json(rows);
+      }
+    });
+  } catch (error) {
+    console.log(`Error While Fetching Contacts Data:${error}`);
+  }
+};
+
+// To get contact by Id
+const getContactById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const conn = await connectDb();
+    conn.query("SELECT * FROM contacts WHERE id = ? ", [id], (err, rows) => {
+      if (err) {
+        console.log("Error", err);
+      } else {
+        res.status(200).json(rows[0]);
+      }
+    });
+  } catch (error) {
+    console.log(`Error While Data Fetching:${error}`);
+  }
+};
+
+// To delete contact by Id
+const deleteContactById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const conn = await connectDb();
+    conn.query("DELETE FROM contacts WHERE id =?", [id], (err, row) => {
+      if (err) {
+        console.log("From contact delete", err);
+      } else {
+        res.status(200).json({ message: "Contact deleted successfully" });
+      }
+    });
+  } catch (error) {
+    console.log(`Error on deleting contact:`, error);
+  }
+};
+
+// Blogs -> To post Blogs
+const blogs = async (req, res) => {
+  try {
+    const { name, description, image } = req.body;
+    const conn = await connectDb();
+    conn.query(
+      "INSERT INTO blogs(name,description,image) VALUES(?,?,?)",
+      [name, description, image],
+      (err, rows) => {
+        if (err) {
+          console.log(`Error While Posting`, err);
+        } else {
+          res.status(200).json({ message: "Blogs inserted successfully" });
+        }
+      }
+    );
+  } catch (error) {
+    console.log(`Error While Posting Blogs`, error);
+  }
+};
+
+module.exports = {
+  getAllUser,
+  deleteUserById,
+  getUserById,
+  getAllContact,
+  getContactById,
+  deleteContactById,
+  blogs
+};
