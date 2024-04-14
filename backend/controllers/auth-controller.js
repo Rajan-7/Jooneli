@@ -54,14 +54,16 @@ const register = async (req, res) => {
       [username, email, contact, hash_password],
       (err, response) => {
         if (err) {
-        return  res.status(500).json({ Error: "Internal server errror" });
+          return res.status(500).json({ Error: "Internal server errror" });
         } else {
-        return  res.status(200).json({ message:"Registration successful",token:token });
+          return res
+            .status(200)
+            .json({ message: "Registration successful", token: token });
         }
       }
     );
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 };
 
@@ -104,12 +106,10 @@ const login = async (req, res) => {
           expiresIn: "30d",
         }
       );
-      return res
-        .status(200)
-        .json({
-          Message: "Login successful",
-          token: token,
-        });
+      return res.status(200).json({
+        Message: "Login successful",
+        token: token,
+      });
     } else {
       return res.status(401).json({ Error: "Invalid Credentials" });
     }
@@ -117,8 +117,5 @@ const login = async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 };
-
-
-
 
 module.exports = { home, register, login };

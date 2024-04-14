@@ -10,7 +10,10 @@ const {
   getAllContact,
   getContactById,
   deleteContactById,
-  blogs
+  blogs,
+  updateUserById,
+  Cnews,
+  Inews
 } = require("../controllers/admin-controller");
 
 // Admin -> Users Route
@@ -19,6 +22,7 @@ router.route("/users/:id").get(authMiddleware, adminMiddleware, getUserById);
 router
   .route("/users/delete/:id")
   .delete(authMiddleware, adminMiddleware, deleteUserById);
+router.route("/users/update/:id").patch(authMiddleware,adminMiddleware,updateUserById);
 
 // Admin -> Contacts Route
 router.route("/contacts").get(authMiddleware, adminMiddleware, getAllContact);
@@ -31,5 +35,11 @@ router
 
 // Admin -> Blogs Route
 router.route('/blogs').post(authMiddleware,adminMiddleware,blogs);
+
+// Admin -> Corporate News
+router.route('/cnews').post(authMiddleware,adminMiddleware,Cnews);
+
+// Admin -> Image News
+router.route('/inews').post(authMiddleware,adminMiddleware,Inews);
 
 module.exports = router;

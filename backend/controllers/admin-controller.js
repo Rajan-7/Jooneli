@@ -1,5 +1,7 @@
 const connectDb = require("../utils/db");
 
+
+
 // To Fetch All The Users Data
 const getAllUser = async (req, res) => {
   try {
@@ -46,6 +48,34 @@ const deleteUserById = async (req, res) => {
     return res.status(200).json({ Message: `User Deleted Successfully` });
   } catch (error) {
     console.log(`Error While Deleting Users:${error}`);
+  }
+};
+
+// To update users by id
+const updateUserById = async (req, res) => {
+  try {
+    const id = req.params;
+    const { username, email, contact } = req.body;
+    const conn = await connectDb();
+
+    // const sqlQuery = "UPDATE users SET username = ?, email = ?, contact=? WHERE id = ?";
+    // const value = [username,email,contact,id];
+
+    // const [rows] = conn.query(sqlQuery,value);
+    // res.status(200).json(rows);
+    conn.query(
+      "UPDATE users SET username = ?, email = ?, contact=? WHERE id = ?",
+      [username, email, contact, id],
+      (err, row) => {
+        if (err) {
+          console.log(`Updation error`, err);
+        } else {
+          res.status(200).json(row);
+        }
+      }
+    );
+  } catch (error) {
+    console.log(`Error updating the user data`, error);
   }
 };
 
@@ -120,6 +150,42 @@ const blogs = async (req, res) => {
   }
 };
 
+
+// To post Corporate News
+const Cnews = async (req,res)=>{
+  try {
+    const {date,description,image}=req.body;
+    const conn = await connectDb();
+    conn.query("INSERT INTO cnews (image,description,date) VALUES(?,?,?)",[image,description,date],(err,rows)=>{
+      if(err){
+        console.log(`Posting cnews:`,err);
+      }else{
+        res.status(200).json(rows);
+      }
+    })
+  } catch (error) {
+    console.log(`Error while posting Cnews`,error);
+  }
+}
+
+// To post Image news/Inews
+const Inews = async(req,res)=>{
+  try {
+    const {image,description,name,type}=req.body;
+    const conn = await connectDb();
+    conn.query("INSERT INTO inews(image,description,name,type) VALUES(?,?,?,?)",[image,description,name,type],(err,rows)=>{
+      if(err){
+        console.log(`Error postin Inews `,err);
+      }else{
+        res.status(200).json(rows);
+      }
+    })
+  } catch (error) {
+    console.log(`Error while posting Inews`,error);
+  }
+}
+
+
 module.exports = {
   getAllUser,
   deleteUserById,
@@ -127,5 +193,8 @@ module.exports = {
   getAllContact,
   getContactById,
   deleteContactById,
-  blogs
+  blogs,
+  updateUserById,
+  Cnews,
+  Inews
 };
