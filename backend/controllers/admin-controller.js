@@ -54,7 +54,7 @@ const deleteUserById = async (req, res) => {
 // To update users by id
 const updateUserById = async (req, res) => {
   try {
-    const id = req.params;
+    const id = req.params.id;
     const { username, email, contact } = req.body;
     const conn = await connectDb();
 
@@ -150,6 +150,22 @@ const blogs = async (req, res) => {
   }
 };
 
+// To fetch Blogs Data
+const getBlogs = async (req, res) => {
+  try {
+    const conn = await connectDb();
+    conn.query("SELECT * FROM blogs", (err, rows) => {
+      if (err) {
+        console.log(`Error While Fetching  Data:${err}`);
+      } else {
+        res.status(200).json(rows);
+      }
+    });
+  } catch (error) {
+    console.log(`Error While Fetching BLogs Data:${error}`);
+  }
+};
+
 
 // To post Corporate News
 const Cnews = async (req,res)=>{
@@ -168,6 +184,22 @@ const Cnews = async (req,res)=>{
   }
 }
 
+// To get Cnews
+const getCnews = async (req, res) => {
+  try {
+    const conn = await connectDb();
+    conn.query("SELECT * FROM cnews", (err, rows) => {
+      if (err) {
+        console.log(`Error While Fetching  Data:${err}`);
+      } else {
+        res.status(200).json(rows);
+      }
+    });
+  } catch (error) {
+    console.log(`Error While Fetching Cnews Data:${error}`);
+  }
+};
+
 // To post Image news/Inews
 const Inews = async(req,res)=>{
   try {
@@ -185,6 +217,22 @@ const Inews = async(req,res)=>{
   }
 }
 
+// To fetch Inews
+const getInews = async (req, res) => {
+  try {
+    const conn = await connectDb();
+    conn.query("SELECT * FROM inews", (err, rows) => {
+      if (err) {
+        console.log(`Error While Fetching  Data:${err}`);
+      } else {
+        res.status(200).json(rows);
+      }
+    });
+  } catch (error) {
+    console.log(`Error While Fetching Inews Data:${error}`);
+  }
+};
+
 
 module.exports = {
   getAllUser,
@@ -196,5 +244,8 @@ module.exports = {
   blogs,
   updateUserById,
   Cnews,
-  Inews
+  Inews,
+  getBlogs,
+  getCnews,
+  getInews
 };
